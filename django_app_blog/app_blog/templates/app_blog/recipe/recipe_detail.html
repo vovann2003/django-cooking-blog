@@ -1,0 +1,36 @@
+{% extends "../base.html" %}
+{% load mathfilters %}
+
+{% block title %}
+    Рецепт: {{ recipe_detail.title }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ recipe_detail.title }}</h1>
+    <img src="{{ recipe_detail.photo.url }}" alt="">
+    <p>{{ recipe_detail.text }}</p>
+    {% if recipe_detail.cooking_time < 1 %}
+        <span>{{ recipe_detail.cooking_time|mul:100}} минут</span>
+    {% endif %}
+    <span>{{ recipe_detail.serving }} порций</span>
+{% endblock %}
+
+{% block comment %}
+    <div id="view-count"></div>
+    <h3>Комментарии ({{ recipe_detail.comment_recipe.all.count }})</h3>
+    <hr>
+    {% for comment in recipe_detail.comment_recipe.all %}
+        <div class="comment-username">
+            <img src="{{ profile.photo.url }}" alt="" width="100">
+            <b>{{ comment.user }}</b>
+            <span class="comment-datetime">{{ comment.published_at|date:"j F Y" }}</span>
+        </div>
+        <div>{{ comment.text }}</div>
+    {% endfor %}
+    <p>Добавить комментарий</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить комментарий</button>
+    </form>
+{% endblock %}

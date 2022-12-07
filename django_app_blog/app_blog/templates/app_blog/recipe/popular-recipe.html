@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="recipe">
+        <table class="top">
+            <tbody>
+            {% if recipe %}
+                {% for recipe in recipe %}
+                    <tr>
+                        <td>
+                            {% if recipe.photo %}
+                            <img src="{{ recipe.photo.url }}" alt="" width="200">
+                            {% else %}
+                                Фото нет
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'recipe-detail' recipe.slug %}" target="_blank">{{ recipe.title }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                Список рецептов пуст
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

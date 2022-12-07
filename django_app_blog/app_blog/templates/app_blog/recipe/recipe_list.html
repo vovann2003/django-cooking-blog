@@ -1,0 +1,52 @@
+{% extends "../base.html" %}
+{% load mathfilters %}
+
+{% block title %}
+    Рецепты
+{% endblock %}
+
+{% block header %}
+    <button type="submit"><a href="{% url 'recipe-list' %}">Главная</a></button>
+    {% if request.user.is_superuser %}
+        <button><a href="{% url 'recipe-form' %}">Добавить рецепт</a></button>
+        <button type="submit"><a href="{% url 'logout' %}">Выйти</a></button>
+        <button type="submit"><a href="{% url 'register' %}">Зарегестрироваться</a></button>
+    {% else %}
+        {% if request.user.is_authenticated %}
+            <button type="submit"><a href="{% url 'popular-recipe' %}" target="_blank">Самые популярные рецепты</a></button>
+            <button type="submit"><a href="{% url 'profile-edit' request.user.id|sub:1 %}">{{ user.profile.username }}</a></button>
+            <button type="submit"><a href="{% url 'logout' %}">Выйти</a></button>
+        {% else %}
+            <button type="submit"><a href="{% url 'popular-recipe' %}" target="_blank">Самые популярные рецепты</a></button>
+            <button type="submit"><a href="{% url 'register' %}">Зарегестрироваться</a></button>
+            <button type="submit"><a href="{% url 'login' %}">Войти</a></button>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="recipe">
+        <table class="top">
+            <tbody>
+            {% if recipe_list %}
+                {% for recipe in recipe_list %}
+                    <tr>
+                        <td>
+                            {% if recipe.photo %}
+                            <img src="{{ recipe.photo.url }}" alt="" width="200">
+                            {% else %}
+                                Фото нет
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'recipe-detail' recipe.slug %}" target="_blank">{{ recipe.title }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                Список рецептов пуст
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
